@@ -16,7 +16,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 public class RootController {
 
     @GetMapping()
-    public HttpEntity<List<Link>> showLinks() {
+    public HttpEntity<List<Link>> root() {
         return new HttpEntity<List<Link>>(new ArrayList() {{
             add(linkTo(UserController.class).withRel("user"));
 //            add(linkTo(methodOn(PersonController.class).show(1L)).withRel("person"));

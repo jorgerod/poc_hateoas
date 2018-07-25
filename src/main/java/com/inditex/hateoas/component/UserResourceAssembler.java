@@ -1,5 +1,6 @@
 package com.inditex.hateoas.component;
 
+import com.inditex.hateoas.controller.RootController;
 import com.inditex.hateoas.controller.UserController;
 import com.inditex.hateoas.model.User;
 import org.springframework.hateoas.Link;
@@ -52,9 +53,10 @@ public class UserResourceAssembler extends ResourceAssemblerSupport<User, UserRe
 
     @Override
     public UserResource toResource(User entity) {
+        Link linkRoot = linkTo(methodOn(RootController.class).root()).withRel("root");
         Link linkSelf = linkTo(methodOn(UserController.class).getUserById(entity.getId())).withSelfRel();
         Link linkOrders = linkTo(methodOn(UserController.class).getOrdersForUser(entity.getId())).withRel("orders");
-        UserResource resource = new UserResource(entity, linkSelf, linkOrders);
+        UserResource resource = new UserResource(entity, linkSelf, linkOrders, linkRoot);
         return resource;
     }
 }
