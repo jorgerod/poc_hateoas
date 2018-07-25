@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 class UserResourceAssembler extends SimpleIdentifiableResourceAssembler<User> {
-
+    https://github.com/spring-projects/spring-hateoas-examples/blob/master/commons/src/main/java/org/springframework/hateoas/SimpleIdentifiableResourceAssembler.java
     EmployeeResourceAssembler() {
         super(EmployeeController.class);
     }
