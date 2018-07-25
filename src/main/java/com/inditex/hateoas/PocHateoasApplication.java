@@ -20,17 +20,17 @@ public class PocHateoasApplication {
     CommandLineRunner init(UserRepository userRepository, OrderRepository orderRepository) {
 		return args -> {
 			userRepository.save(User.builder()
-                    .userId(1)
+                    .id(1)
                     .name("Frodo Bolson")
                     .age(20)
                     .build());
 			userRepository.save(User.builder()
-                    .userId(2)
+                    .id(2)
                     .name("Bilbo Bolson")
                     .age(100)
                     .build());
             userRepository.save(User.builder()
-                    .userId(3)
+                    .id(3)
                     .name("Sam Gamyi")
                     .age(18)
                     .build());

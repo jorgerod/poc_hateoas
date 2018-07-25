@@ -1,6 +1,8 @@
 package com.inditex.hateoas.controller;
 
 
+import com.inditex.hateoas.component.UserResource;
+import com.inditex.hateoas.component.UserResourceAssembler;
 import com.inditex.hateoas.dao.OrderRepository;
 import com.inditex.hateoas.dao.UserRepository;
 import com.inditex.hateoas.model.Order;
@@ -8,7 +10,7 @@ import com.inditex.hateoas.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,36 +22,21 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping(value = "api/users/", produces = "application/hal+json")
-//@EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
+@RequestMapping(value = "api/users")
 public class UserController {
 
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
 
     @GetMapping
-    public Resources<User> getAllUsers() {
-//        return ResponseEntity.ok(userRepository.findAll());
-
-        List<User> users = userRepository.findAll();
-        Link link = linkTo(UserController.class).withSelfRel();
-
-        for (User user : users) {
-            Integer userId = user.getUserId();
-            Link selfLink = linkTo(UserController.class).slash(userId).withSelfRel();
-            user.add(selfLink);
-//            if (orderRepository.getAllOrdersForUser(userId).size() > 0) {
-                Link ordersLink = linkTo(methodOn(UserController.class)
-                        .getOrdersForUser(userId)).withRel("allOrders");
-                user.add(ordersLink);
-//            }
-        }
-
-
-        return new Resources<User>(userRepository.findAll(), link);
+    public HttpEntity<List<UserResource>> getAllUsers() {
+        Iterable<? extends User> users = userRepository.findAll();
+        UserResourceAssembler assembler = new UserResourceAssembler();
+        List<UserResource> resources = assembler.toResources(users);
+        return new HttpEntity<List<UserResource>>(resources);
     }
 
-    @GetMapping(value = "/{userId}/orders", produces = {"application/hal+json"})
+    @GetMapping(value = "/{userId}/orders")
     public Resources<Order> getOrdersForUser(@PathVariable final Integer userId) {
         List<Order> orders = orderRepository.findByUserId(userId);
         for (final Order order : orders) {
@@ -66,8 +53,11 @@ public class UserController {
 
 
     @GetMapping("{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable("userId") Integer id) {
-        return ResponseEntity.ok(userRepository.getOne(id));
+    public HttpEntity<UserResource> getUserById(@PathVariable("userId") Integer id) {
+        User user = userRepository.getOne(id);
+        UserResourceAssembler assembler = new UserResourceAssembler();
+        UserResource resources = assembler.toResource(user);
+        return new HttpEntity<UserResource>(resources);
     }
 
     @Autowired

@@ -1,10 +1,15 @@
 package com.inditex.hateoas.model;
 
-import lombok.*;
-import org.springframework.hateoas.ResourceSupport;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 
 @Data
@@ -12,10 +17,12 @@ import javax.persistence.Id;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends ResourceSupport {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class User implements Serializable {
 
     @Id
-    private Integer userId;
+    private Integer id;
     private String name;
     private int age;
 }

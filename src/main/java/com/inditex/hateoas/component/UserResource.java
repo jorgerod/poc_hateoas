@@ -1,10 +1,17 @@
 package com.inditex.hateoas.component;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.inditex.hateoas.model.User;
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Resource;
 
-public class UserResource extends ResourceSupport {
-    public UserResource(User entity) {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class UserResource extends Resource {
 
+//    Resources<ProductResource> products;
+
+    public UserResource(User content, Link... links) {
+        super(content, links);
     }
+
 }
